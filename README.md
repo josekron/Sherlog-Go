@@ -1,6 +1,6 @@
 # Sherlog Go #
 
-![Sherlog Go](http://imgur.com/hSyDRrH.jpg)
+![Sherlog Go](http://imgur.com/Jx1qtmh.jpg)
 
 A tool for search in log files. 
 
