@@ -1,5 +1,7 @@
 # Sherlog Go #
 
+![Sherlog Go](http://imgur.com/hSyDRrH.jpg)
+
 A tool for search in log files. 
 
 ### Usage ###
