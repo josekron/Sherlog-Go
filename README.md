@@ -12,5 +12,5 @@ A tool for search in log files.
 
 ### Next features ###
 
-- Compare dates of the results of differents log files and display them sorted.
+- Add colors in console.
 - Load files from remote server.
