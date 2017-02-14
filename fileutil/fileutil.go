@@ -92,8 +92,8 @@ func SearchInFile(localFile string, text string) []LogLine {
 	return logList
 }
 
-func GetLogLine(lineLine string, value string, text string) LogLine {
-	logLine := LogLine{lineLine, value, text}
+func GetLogLine(typeLine string, value string, text string) LogLine {
+	logLine := LogLine{typeLine, value, text}
 	return logLine
 }
 
@@ -122,6 +122,71 @@ func PrintLogLine(logLine *LogLine) {
 		fmt.Println(logLine.valueLine, " -> ", logLine.textLine)
 	} else {
 		fmt.Println(logLine.typeLine+" "+logLine.valueLine, " -> ", logLine.textLine)
+	}
+}
+
+func PrintLogLineList(logsLineList [][]LogLine, fileLogs []string) {
+
+	counter := make([]int, len(logsLineList))
+	for i := 0; i < len(counter); i++ {
+		counter[i] = len(logsLineList[i]) - 1
+	}
+
+	var proccesed bool = false
+	prevSelectedLogLine := GetLogLine("line", "-1", "")
+
+	for !proccesed {
+		selectedLogLine := GetLogLine("line", "-1", "")
+		selectedLog := 0
+
+		for i := 0; i < len(logsLineList); i++ {
+
+			if counter[i] > 0 {
+
+				if selectedLogLine.valueLine != "-1" {
+
+					//Check if previous line was a type=date and if current line has the same date
+					if logsLineList[i][len(logsLineList[i])-counter[i]].typeLine == "date" && prevSelectedLogLine.valueLine != "-1" && prevSelectedLogLine.typeLine == "date" {
+
+						if logsLineList[i][len(logsLineList[i])-counter[i]].valueLine == prevSelectedLogLine.valueLine {
+							selectedLogLine = logsLineList[i][len(logsLineList[i])-counter[i]]
+							selectedLog = i
+							i = len(logsLineList)
+						}
+
+					} else {
+
+						//Preference type=line
+						if logsLineList[i][len(logsLineList[i])-counter[i]].typeLine == "line" {
+							selectedLogLine = logsLineList[i][len(logsLineList[i])-counter[i]]
+							selectedLog = i
+						} else if selectedLogLine.typeLine != "line" {
+							selectedLogLine = logsLineList[i][len(logsLineList[i])-counter[i]]
+							selectedLog = i
+						}
+					}
+				} else { //First line
+					selectedLogLine = logsLineList[i][len(logsLineList[i])-counter[i]]
+					selectedLog = i
+				}
+			}
+		}
+
+		fmt.Print("[", fileLogs[selectedLog], "] - ")
+		PrintLogLine(&logsLineList[selectedLog][len(logsLineList[selectedLog])-counter[selectedLog]])
+
+		prevSelectedLogLine = logsLineList[selectedLog][len(logsLineList[selectedLog])-counter[selectedLog]]
+		selectedLogLine = GetLogLine("line", "-1", "")
+		counter[selectedLog]--
+
+		//check if all lines are processed:
+		proccesed = true
+		for i := 0; i < len(counter); i++ {
+			if counter[i] > 0 {
+				proccesed = false
+				break
+			}
+		}
 	}
 }
 

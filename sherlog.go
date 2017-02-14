@@ -73,12 +73,7 @@ func searchFiles(words []string, fileLogs []string) {
 		wg.Wait()
 		fmt.Println("Search done!")
 
-		for i := 0; i < len(fileLogsList); i++ {
-			fmt.Printf("---------- File: %s ----------\n\n", fileLogs[i])
-			for j := 0; j < len(fileLogsList[i]); j++ {
-				fileutil.PrintLogLine(&fileLogsList[i][j])
-			}
-		}
+		fileutil.PrintLogLineList(fileLogsList, fileLogs)
 	}
 }
 
