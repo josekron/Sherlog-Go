@@ -85,7 +85,7 @@ func workerSearchInFile(wg *sync.WaitGroup, fileLogsList [][]fileutil.LogLine, p
 }
 
 func addFile(file []string, fileLogs []string) []string {
-	if len(file) == 1 {
+	if len(file) <= 1 {
 		fmt.Println("Write local url of the file")
 	} else {
 		var file = file[1]
