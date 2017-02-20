@@ -11,6 +11,8 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+
+	"github.com/fatih/color"
 )
 
 func IsLocalFile(localFile string) bool {
@@ -118,10 +120,13 @@ func GetText(logLine *LogLine) string {
 }
 
 func PrintLogLine(logLine *LogLine) {
+	c := color.New(color.FgCyan)
 	if logLine.typeLine == "date" {
-		fmt.Println(logLine.valueLine, " -> ", logLine.textLine)
+		c.Print(" - ", logLine.valueLine, " -> ")
+		fmt.Println(logLine.textLine)
 	} else {
-		fmt.Println(logLine.typeLine+" "+logLine.valueLine, " -> ", logLine.textLine)
+		c.Print(" - ", logLine.typeLine+" "+logLine.valueLine, " -> ")
+		fmt.Println(logLine.textLine)
 	}
 }
 
@@ -172,7 +177,8 @@ func PrintLogLineList(logsLineList [][]LogLine, fileLogs []string) {
 			}
 		}
 
-		fmt.Print("[", fileLogs[selectedLog], "] - ")
+		c := color.New(color.FgYellow)
+		c.Print("[", fileLogs[selectedLog], "] ")
 		PrintLogLine(&logsLineList[selectedLog][len(logsLineList[selectedLog])-counter[selectedLog]])
 
 		prevSelectedLogLine = logsLineList[selectedLog][len(logsLineList[selectedLog])-counter[selectedLog]]

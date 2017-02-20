@@ -11,6 +11,8 @@ import (
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/fatih/color"
 )
 
 func main() {
@@ -126,6 +128,7 @@ func displayFileLogs(fileLog []string) {
 }
 
 func title() {
-	fmt.Println("_______________\n| Sherlog 1.0 |\n_______________")
+	c := color.New(color.FgYellow)
+	c.Println("_______________\n| Sherlog 1.0 |\n_______________")
 	fmt.Println()
 }
