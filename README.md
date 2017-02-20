@@ -10,7 +10,4 @@ A tool for search in log files.
 - search [text]: search the text in the loaded files.
 - exit: exit to program.
 
-### Next features ###
-
-- Add colors in console.
-- Load files from remote server.
+Colors in term thanks to https://github.com/fatih/color
