@@ -62,6 +62,7 @@ func SearchInFile(localFile string, text string) []LogLine {
 	rpDate := regexp.MustCompile("\\d{4,4}-\\d{2,2}-\\d{2,2} \\d{1,2}:\\d{2,2}:\\d{2,2}")
 
 	text = strings.ToUpper(strings.TrimSpace(text))
+
 	reader := bufio.NewReader(file)
 	var line string
 	var counterLine int = 1
@@ -119,18 +120,34 @@ func GetText(logLine *LogLine) string {
 	return logLine.textLine
 }
 
-func PrintLogLine(logLine *LogLine) {
-	c := color.New(color.FgCyan)
+func PrintLogLine(logLine *LogLine, text string, re *regexp.Regexp) {
+	cyan := color.New(color.FgCyan)
+	yellow := color.New(color.FgBlack).Add(color.BgYellow)
+
+	var ocurrences []string
+
 	if logLine.typeLine == "date" {
-		c.Print(" - ", logLine.valueLine, " -> ")
-		fmt.Println(logLine.textLine)
+		cyan.Print(" - ", logLine.valueLine, " -> ")
+
 	} else {
-		c.Print(" - ", logLine.typeLine+" "+logLine.valueLine, " -> ")
-		fmt.Println(logLine.textLine)
+		cyan.Print(" - ", logLine.typeLine+" "+logLine.valueLine, " -> ")
 	}
+
+	ocurrences = re.Split(logLine.textLine, -1)
+	for i := 0; i < len(ocurrences); i++ {
+		fmt.Print(ocurrences[i])
+		if i+1 < len(ocurrences) {
+			yellow.Print(text)
+		}
+	}
+	fmt.Println(" ")
+
 }
 
-func PrintLogLineList(logsLineList [][]LogLine, fileLogs []string) {
+func PrintLogLineList(logsLineList [][]LogLine, fileLogs []string, text string) {
+
+	re := regexp.MustCompile(("(?i)" + text))
+	yellow := color.New(color.FgYellow)
 
 	counter := make([]int, len(logsLineList))
 	for i := 0; i < len(counter); i++ {
@@ -177,9 +194,8 @@ func PrintLogLineList(logsLineList [][]LogLine, fileLogs []string) {
 			}
 		}
 
-		c := color.New(color.FgYellow)
-		c.Print("[", fileLogs[selectedLog], "] ")
-		PrintLogLine(&logsLineList[selectedLog][len(logsLineList[selectedLog])-counter[selectedLog]])
+		yellow.Print("[", fileLogs[selectedLog], "] ")
+		PrintLogLine(&logsLineList[selectedLog][len(logsLineList[selectedLog])-counter[selectedLog]], text, re)
 
 		prevSelectedLogLine = logsLineList[selectedLog][len(logsLineList[selectedLog])-counter[selectedLog]]
 		selectedLogLine = GetLogLine("line", "-1", "")

@@ -20,6 +20,7 @@ func main() {
 
 	//Variables:
 	fileLogs := []string{}
+	//fileLogs := []string{"C:\\server.log"}
 	//fileLogs := []string{"C:\\server.log", "C:\\server2.log"}
 
 	//Commands menu:
@@ -75,7 +76,7 @@ func searchFiles(words []string, fileLogs []string) {
 		wg.Wait()
 		fmt.Println("Search done!")
 
-		fileutil.PrintLogLineList(fileLogsList, fileLogs)
+		fileutil.PrintLogLineList(fileLogsList, fileLogs, strings.TrimSpace(text))
 	}
 }
 
