@@ -194,12 +194,14 @@ func PrintLogLineList(logsLineList [][]LogLine, fileLogs []string, text string) 
 			}
 		}
 
-		yellow.Print("[", fileLogs[selectedLog], "] ")
-		PrintLogLine(&logsLineList[selectedLog][len(logsLineList[selectedLog])-counter[selectedLog]], text, re)
+		if selectedLogLine.valueLine != "-1" {
+			yellow.Print("[", fileLogs[selectedLog], "] ")
+			PrintLogLine(&logsLineList[selectedLog][len(logsLineList[selectedLog])-counter[selectedLog]], text, re)
 
-		prevSelectedLogLine = logsLineList[selectedLog][len(logsLineList[selectedLog])-counter[selectedLog]]
-		selectedLogLine = GetLogLine("line", "-1", "")
-		counter[selectedLog]--
+			prevSelectedLogLine = logsLineList[selectedLog][len(logsLineList[selectedLog])-counter[selectedLog]]
+			selectedLogLine = GetLogLine("line", "-1", "")
+			counter[selectedLog]--
+		}
 
 		//check if all lines are processed:
 		proccesed = true
