@@ -11,6 +11,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/fatih/color"
 )
@@ -93,6 +94,84 @@ func SearchInFile(localFile string, text string) []LogLine {
 		fmt.Printf(" > Failed!: %v\n", err)
 	}
 	return logList
+}
+
+func ExportLogLineList(logsLineList [][]LogLine, fileLogs []string, text string) {
+	t := time.Now()
+	file, err := os.Create("/" + text + "_" + t.Format("20060102150405") + ".txt")
+	if err != nil {
+		fmt.Println("Error! The system cannot create the file")
+	}
+	defer file.Close()
+
+	counter := make([]int, len(logsLineList))
+	for i := 0; i < len(counter); i++ {
+		counter[i] = len(logsLineList[i]) - 1
+	}
+
+	var proccesed bool = false
+	prevSelectedLogLine := GetLogLine("line", "-1", "")
+
+	for !proccesed {
+		selectedLogLine := GetLogLine("line", "-1", "")
+		selectedLog := 0
+
+		for i := 0; i < len(logsLineList); i++ {
+
+			if counter[i] > 0 {
+
+				if selectedLogLine.valueLine != "-1" {
+
+					//Check if previous line was a type=date and if current line has the same date
+					if logsLineList[i][len(logsLineList[i])-counter[i]].typeLine == "date" && prevSelectedLogLine.valueLine != "-1" && prevSelectedLogLine.typeLine == "date" {
+
+						if logsLineList[i][len(logsLineList[i])-counter[i]].valueLine == prevSelectedLogLine.valueLine {
+							selectedLogLine = logsLineList[i][len(logsLineList[i])-counter[i]]
+							selectedLog = i
+							i = len(logsLineList)
+						}
+
+					} else {
+
+						//Preference type=line
+						if logsLineList[i][len(logsLineList[i])-counter[i]].typeLine == "line" {
+							selectedLogLine = logsLineList[i][len(logsLineList[i])-counter[i]]
+							selectedLog = i
+						} else if selectedLogLine.typeLine != "line" {
+							selectedLogLine = logsLineList[i][len(logsLineList[i])-counter[i]]
+							selectedLog = i
+						}
+					}
+				} else { //First line
+					selectedLogLine = logsLineList[i][len(logsLineList[i])-counter[i]]
+					selectedLog = i
+				}
+			}
+		}
+
+		if selectedLogLine.valueLine != "-1" {
+			logLine := logsLineList[selectedLog][len(logsLineList[selectedLog])-counter[selectedLog]]
+
+			newLine := []byte(fileLogs[selectedLog] + " " + logLine.typeLine + " -> " + logLine.textLine + "\n")
+			if logLine.typeLine == "date" {
+				newLine = []byte(fileLogs[selectedLog] + " " + logLine.valueLine + " -> " + logLine.textLine + "\n")
+			}
+			file.Write(newLine)
+
+			prevSelectedLogLine = logsLineList[selectedLog][len(logsLineList[selectedLog])-counter[selectedLog]]
+			selectedLogLine = GetLogLine("line", "-1", "")
+			counter[selectedLog]--
+		}
+
+		//check if all lines are processed:
+		proccesed = true
+		for i := 0; i < len(counter); i++ {
+			if counter[i] > 0 {
+				proccesed = false
+				break
+			}
+		}
+	}
 }
 
 func GetLogLine(typeLine string, value string, text string) LogLine {

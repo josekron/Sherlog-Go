@@ -38,7 +38,9 @@ func main() {
 			fileLogs = addFile(words, fileLogs)
 			displayFileLogs(fileLogs)
 		case "search":
-			searchFiles(words, fileLogs)
+			searchFiles(words, fileLogs, false)
+		case "export":
+			searchFiles(words, fileLogs, true)
 		case "exit":
 			fmt.Println("Bye!")
 		default:
@@ -47,7 +49,7 @@ func main() {
 	}
 }
 
-func searchFiles(words []string, fileLogs []string) {
+func searchFiles(words []string, fileLogs []string, exportFile bool) {
 	if len(words) == 1 {
 		fmt.Println("Write the text for the search")
 
@@ -76,7 +78,12 @@ func searchFiles(words []string, fileLogs []string) {
 		wg.Wait()
 		fmt.Println("Search done!")
 
-		fileutil.PrintLogLineList(fileLogsList, fileLogs, strings.TrimSpace(text))
+		if !exportFile {
+			fileutil.PrintLogLineList(fileLogsList, fileLogs, strings.TrimSpace(text))
+		} else {
+			fileutil.ExportLogLineList(fileLogsList, fileLogs, strings.TrimSpace(text))
+		}
+
 	}
 }
 

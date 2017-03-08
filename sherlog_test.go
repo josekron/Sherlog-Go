@@ -52,17 +52,15 @@ func TestFileLogsContainsFile1(t *testing.T) {
 func TestSearchFiles1(t *testing.T) {
 	fileLogs := []string{"C:\\server.log"}
 	words := []string{"search", "command"}
-	searchFiles(words, fileLogs)
+	searchFiles(words, fileLogs, false)
+	searchFiles(words, fileLogs, true)
 
 	words = []string{"command"}
-	searchFiles(words, fileLogs)
-
-	words = []string{}
-	searchFiles(words, fileLogs)
+	searchFiles(words, fileLogs, false)
 
 	fileLogs = []string{}
 	words = []string{}
-	searchFiles(words, fileLogs)
+	searchFiles(words, fileLogs, false)
 }
 
 func TestDisplayFileLogs(t *testing.T) {
