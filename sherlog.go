@@ -5,7 +5,6 @@ package main
 
 import (
 	"bufio"
-	"fileutil"
 	"fmt"
 	"os"
 	"strings"
@@ -13,6 +12,7 @@ import (
 	"time"
 
 	"github.com/fatih/color"
+	"github.com/josekron/Sherlog-Go/fileutil"
 )
 
 func main() {
